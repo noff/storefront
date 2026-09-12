@@ -42,13 +42,13 @@
           </div>
         <% end %>
 
-        <a href="#" class="btn btn-outline-secondary btn-lg position-relative" aria-label="Корзина">
+        <%= link_to cart_path, class: "btn btn-outline-secondary btn-lg position-relative" do %>
           <i class="bi bi-bag" aria-hidden="true"></i>
           <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            3
+            <%= current_cart.count %>
             <span class="visually-hidden">товаров в корзине</span>
           </span>
-        </a>
+        <% end %>
       </div>
     </header>
 

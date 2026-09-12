@@ -4,4 +4,14 @@ class ApplicationController < ActionController::Base
 
   # Changes to the importmap will invalidate the etag for HTML responses
   stale_when_importmap_changes
+
+  helper_method :current_cart
+
+  private
+
+  # Содержимое корзины текущей сессии
+  # @return [Array<DTO::Cart::Item>]
+  def current_cart
+    @current_cart ||= Cart::Get.call(session: session)
+  end
 end

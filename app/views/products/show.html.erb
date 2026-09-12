@@ -60,10 +60,16 @@
       <% end %>
     </div>
 
-    <%# Корзины пока нет — кнопка ведёт в никуда, как в карточках товара. %>
-    <%= link_to "#", class: "btn btn-primary btn-lg w-100 #{"disabled" unless @product.available}",
-          aria: { disabled: !@product.available } do %>
-      <i class="bi bi-bag-plus me-2" aria-hidden="true"></i>В корзину
+    <% if current_cart.any? { |item| item.product.id == @product.id } %>
+      <%= button_to remove_cart_path(product_id: @product.id), method: :delete,
+            class: "btn btn-warning btn-lg w-100", form_class: "d-grid" do %>
+        <i class="bi bi-bag-dash me-2" aria-hidden="true"></i>Удалить из корзины
+      <% end %>
+    <% else %>
+      <%= button_to add_cart_path(product_id: @product.id), method: :patch,
+            class: "btn btn-primary btn-lg w-100", form_class: "d-grid" do %>
+        <i class="bi bi-bag-plus me-2" aria-hidden="true"></i>В корзину
+      <% end %>
     <% end %>
 
     <% if specs.any? %>
