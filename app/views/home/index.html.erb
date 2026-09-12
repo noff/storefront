@@ -67,7 +67,7 @@
 </section>
 
 <%# ── Сетка товаров ───────────────────────────────────────────────────── %>
-<section>
+<section class="mb-5">
   <div class="d-flex align-items-center justify-content-between mb-3">
     <h2 class="h4 mb-0">Популярные товары</h2>
     <a href="#" class="link-secondary text-decoration-none small">
@@ -85,6 +85,17 @@
     <% end %>
   </div>
 </section>
+
+<% if @categories.exists? %>
+  <section class="mb-5">
+    <div class="row row-cols-1 row-cols-md-6 g-4">
+      <% @categories.each do |category| %>
+        <%= render "categories/category_card", category: category %>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
 
 <%# ── Нижний баннер ───────────────────────────────────────────────────── %>
 <section class="my-5 d-flex justify-content-center">

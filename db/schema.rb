@@ -10,5 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 0) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_12_103000) do
+  create_table "categories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "ext_id"
+    t.string "name"
+    t.string "parent_id"
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.index ["ext_id"], name: "index_categories_on_ext_id", unique: true
+  end
+
+  create_table "products", force: :cascade do |t|
+    t.boolean "available"
+    t.integer "category_id"
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.string "ext_id"
+    t.string "name"
+    t.integer "old_price"
+    t.text "params"
+    t.string "picture"
+    t.integer "price"
+    t.decimal "rating"
+    t.datetime "updated_at", null: false
+    t.string "url"
+    t.string "vendor"
+    t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["ext_id"], name: "index_products_on_ext_id", unique: true
+  end
 end

@@ -1,0 +1,35 @@
+<h1 class="mb-3"><%= @category.name %></h1>
+
+<% if @breadcrumbs.any? %>
+  <section class="mb-3">
+    <% @breadcrumbs.each do |category| %>
+      <%= link_to category.name, category %>
+      <i class="bi bi-arrow-right"></i>
+    <% end %>
+    <%= @category.name %>
+  </section>
+<% end %>
+
+<% if @subcategories.exists? %>
+  <section class="mb-5">
+    <div class="row row-cols-1 row-cols-md-6 g-4">
+      <% @subcategories.each do |category| %>
+        <%= render "category_card", category: category %>
+      <% end %>
+    </div>
+  </section>
+<% end %>
+
+<% if @products.exists? %>
+  <section>
+    <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-4">
+      <% @products.each do |product| %>
+        <div class="col">
+          <div class="h-100 shadow-sm rounded-4">
+            <%= render "home/product_card", product: product %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+<% end %>
