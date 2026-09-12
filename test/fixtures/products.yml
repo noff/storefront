@@ -1,11 +1,23 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the "{}" from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+air_max:
+  ext_id: air-max-pro
+  name: Air Max Pro 2025
+  description: Беговые кроссовки с амортизацией для длинных дистанций
+  vendor: ShopCo
+  price: 18900
+  old_price: 22900
+  rating: 4.5
+  available: true
+  picture: https://shop.example.com/img/air-max-pro.jpg
+  url: https://shop.example.com/products/air-max-pro
+  category: running
+  params: '[{"name":"Цвет","value":"Чёрный"},{"name":"Размер","value":"US 10"}]'
+
+# Минимальный товар: ни категории, ни характеристик, ни рейтинга — проверяет,
+# что шаблон не падает на пустых полях.
+sold_out:
+  ext_id: sold-out
+  name: Товар без категории
+  price: 990
+  available: false

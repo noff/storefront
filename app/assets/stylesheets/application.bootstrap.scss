@@ -27,6 +27,12 @@
   }
 }
 
+// Главное фото на странице товара: contain, чтобы не срезать края товара
+.product-hero-image {
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
 // Лёгкий подъём карточки при наведении
 .product-card {
   @media (prefers-reduced-motion: no-preference) {

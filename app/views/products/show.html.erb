@@ -1,0 +1,88 @@
+<% discount = discount_percent(@product.price, @product.old_price) %>
+<% specs = @product.parsed_params %>
+
+<% if @breadcrumbs.any? %>
+  <nav class="mb-3 small" aria-label="Хлебные крошки">
+    <%= link_to "Главная", root_path, class: "link-secondary text-decoration-none" %>
+    <% @breadcrumbs.each do |category| %>
+      <i class="bi bi-chevron-right mx-1 text-body-tertiary" aria-hidden="true"></i>
+      <%= link_to category.name, category, class: "link-secondary text-decoration-none" %>
+    <% end %>
+    <i class="bi bi-chevron-right mx-1 text-body-tertiary" aria-hidden="true"></i>
+    <span class="text-body-secondary"><%= @product.name %></span>
+  </nav>
+<% end %>
+
+<section class="row g-4 g-lg-5 mb-5">
+  <%# ── Фото ─────────────────────────────────────────────────────────── %>
+  <div class="col-lg-6">
+    <div class="bg-body rounded-4 shadow-sm overflow-hidden position-relative p-3">
+      <%= image_tag @product.picture.presence || placeholder_image(@product.name, width: 800, height: 800),
+            class: "w-100 product-hero-image", alt: @product.name %>
+      <% if discount %>
+        <span class="badge text-bg-danger position-absolute top-0 start-0 m-3">−<%= discount %>%</span>
+      <% end %>
+    </div>
+  </div>
+
+  <%# ── Информация ───────────────────────────────────────────────────── %>
+  <div class="col-lg-6">
+    <% if @product.vendor.present? %>
+      <div class="text-body-secondary small mb-1"><%= @product.vendor %></div>
+    <% end %>
+
+    <h1 class="h2 mb-3"><%= @product.name %></h1>
+
+    <% if @product.rating.present? %>
+      <div class="mb-3"><%= rating_stars(@product.rating) %></div>
+    <% end %>
+
+    <div class="mb-3">
+      <span class="fs-2 fw-bold"><%= price(@product.price) %></span>
+      <% if @product.old_price %>
+        <span class="text-body-secondary text-decoration-line-through fs-5 ms-2">
+          <%= price(@product.old_price) %>
+        </span>
+      <% end %>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="mb-3">
+      <% if @product.available %>
+        <span class="badge text-bg-success-subtle text-success-emphasis">
+          <i class="bi bi-check-circle me-1" aria-hidden="true"></i>В наличии
+        </span>
+      <% else %>
+        <span class="badge text-bg-secondary-subtle text-body-secondary">
+          <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Нет в наличии
+        </span>
+      <% end %>
+    </div>
+
+    <%# Корзины пока нет — кнопка ведёт в никуда, как в карточках товара. %>
+    <%= link_to "#", class: "btn btn-primary btn-lg w-100 #{"disabled" unless @product.available}",
+          aria: { disabled: !@product.available } do %>
+      <i class="bi bi-bag-plus me-2" aria-hidden="true"></i>В корзину
+    <% end %>
+
+    <% if specs.any? %>
+      <hr class="my-4">
+      <h2 class="h6 fw-semibold mb-3">Характеристики</h2>
+      <dl class="row row-cols-1 mb-0 small">
+        <% specs.each do |spec| %>
+          <div class="col d-flex gap-2 border-bottom py-2">
+            <dt class="fw-normal text-body-secondary flex-shrink-0"><%= spec["name"] %></dt>
+            <dd class="mb-0 ms-auto text-end"><%= spec["value"] %></dd>
+          </div>
+        <% end %>
+      </dl>
+    <% end %>
+
+    <% if @product.description.present? %>
+      <hr class="my-4">
+      <h2 class="h6 fw-semibold mb-2">Описание</h2>
+      <p class="text-body-secondary mb-0"><%= @product.description %></p>
+    <% end %>
+  </div>
+</section>

@@ -1,11 +1,14 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the "{}" from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+# parent_id хранит ext_id родителя, а не его первичный ключ — поэтому строка,
+# а не ссылка на метку фикстуры.
+shoes:
+  ext_id: shoes
+  name: Обувь
+  url: https://shop.example.com/shoes
+
+running:
+  ext_id: running
+  name: Кроссовки
+  parent_id: shoes
+  url: https://shop.example.com/shoes/running
