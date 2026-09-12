@@ -1,0 +1,33 @@
+<%# Карточка товара. wide: true — широкая картинка (5:3), для блока «Товар дня». %>
+<% wide = local_assigns.fetch(:wide, false) %>
+<% discount = discount_percent(product[:price], product[:old_price]) %>
+
+<div class="card h-100 border-0 rounded-4 overflow-hidden product-card">
+  <div class="position-relative">
+    <%= image_tag placeholder_image(product[:title], width: 600, height: wide ? 360 : 600),
+          class: "w-100 product-image #{'product-image--wide' if wide}", alt: product[:title] %>
+    <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2"
+            type="button" aria-label="Добавить «<%= product[:title] %>» в избранное">
+      <i class="bi bi-heart" aria-hidden="true"></i>
+    </button>
+    <% if discount %>
+      <span class="badge text-bg-danger position-absolute bottom-0 start-0 m-2">−<%= discount %>%</span>
+    <% end %>
+  </div>
+
+  <div class="card-body d-flex flex-column">
+    <div class="small mb-1"><%= rating_stars(product[:rating]) %></div>
+    <h3 class="h6 card-title mb-2"><%= product[:title] %></h3>
+    <div class="mb-3">
+      <span class="<%= wide ? "fs-4 fw-bold" : "fw-bold" %>"><%= price(product[:price]) %></span>
+      <% if product[:old_price] %>
+        <span class="text-body-secondary text-decoration-line-through small ms-1">
+          <%= price(product[:old_price]) %>
+        </span>
+      <% end %>
+    </div>
+    <a href="#" class="btn <%= wide ? "btn-primary" : "btn-outline-primary btn-sm" %> mt-auto">
+      <i class="bi bi-bag-plus me-1" aria-hidden="true"></i>В корзину
+    </a>
+  </div>
+</div>

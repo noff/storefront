@@ -42,3 +42,6 @@
 
 .idea
 *.iml
+# Артефакты сессий Craft Agent — не код магазина.
+/events.jsonl
+/sessions/
