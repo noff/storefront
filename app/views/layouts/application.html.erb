@@ -49,10 +49,36 @@
             <span class="visually-hidden">товаров в корзине</span>
           </span>
         <% end %>
+
+        <% if user_signed_in? %>
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary btn-lg dropdown-toggle" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle" aria-hidden="true"></i>
+              <span class="d-none d-lg-inline ms-1"><%= current_user.email %></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><%= link_to "Профиль", edit_user_registration_path, class: "dropdown-item" %></li>
+              <li><hr class="dropdown-divider"></li>
+              <li>
+                <%= button_to "Выйти", destroy_user_session_path, method: :delete,
+                      class: "dropdown-item" %>
+              </li>
+            </ul>
+          </div>
+        <% else %>
+          <%= link_to new_user_session_path, class: "btn btn-outline-secondary btn-lg text-nowrap" do %>
+            <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
+            <span class="d-none d-md-inline ms-1">Войти</span>
+          <% end %>
+          <%= link_to "Регистрация", new_user_registration_path,
+                class: "btn btn-primary btn-lg text-nowrap d-none d-md-inline-block" %>
+        <% end %>
       </div>
     </header>
 
     <main class="container-fluid px-4 py-4">
+      <%= render "shared/flash" %>
       <%= yield %>
     </main>
   </body>

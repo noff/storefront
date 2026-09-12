@@ -1,0 +1,8 @@
+# Пароль у обоих — "password" (хешируется при загрузке фикстур).
+alice:
+  email: alice@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>
+
+bob:
+  email: bob@example.com
+  encrypted_password: <%= Devise::Encryptor.digest(User, "password") %>

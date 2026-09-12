@@ -23,6 +23,13 @@ gem "cssbundling-rails"
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 gem "jbuilder"
 
+# Аутентификация [https://github.com/heartcombo/devise]
+gem "devise"
+# Формы с bootstrap-обёртками [https://github.com/heartcombo/simple_form]
+gem "simple_form"
+# ru-переводы ядра Rails: ошибки валидации, даты, числа
+gem "rails-i18n"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 

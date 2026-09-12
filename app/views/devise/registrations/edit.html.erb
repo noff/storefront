@@ -1,0 +1,48 @@
+<% content_for :title, "Профиль" %>
+
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-6 col-xl-5">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 d-flex align-items-center gap-2 mb-4">
+          <i class="bi bi-person-gear text-primary" aria-hidden="true"></i>
+          Настройки профиля
+        </h1>
+
+        <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+          <%= f.error_notification %>
+
+          <%= f.input :email, required: true, autofocus: true %>
+
+          <%= f.input :password,
+                      label: "Новый пароль",
+                      hint: "Оставьте пустым, если не хотите менять пароль",
+                      required: false,
+                      input_html: { autocomplete: "new-password" } %>
+          <%= f.input :password_confirmation,
+                      label: "Подтверждение нового пароля",
+                      required: false,
+                      input_html: { autocomplete: "new-password" } %>
+          <%= f.input :current_password,
+                      hint: "Нужен, чтобы подтвердить изменения",
+                      required: true,
+                      input_html: { autocomplete: "current-password" } %>
+
+          <%= f.button :submit, "Сохранить", class: "btn btn-primary btn-lg w-100" %>
+        <% end %>
+
+        <hr class="my-4">
+
+        <h2 class="h6 text-muted">Удаление аккаунта</h2>
+        <p class="small text-muted">Аккаунт и все его данные будут удалены безвозвратно.</p>
+        <%= button_to "Удалить аккаунт", registration_path(resource_name), method: :delete,
+              class: "btn btn-outline-danger w-100",
+              data: { turbo_confirm: "Удалить аккаунт? Действие необратимо." } %>
+      </div>
+    </div>
+
+    <p class="text-center mt-3 mb-0">
+      <%= link_to "← Назад в магазин", root_path, class: "small text-muted" %>
+    </p>
+  </div>
+</div>

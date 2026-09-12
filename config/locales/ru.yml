@@ -1,0 +1,20 @@
+ru:
+  activerecord:
+    models:
+      user: "Пользователь"
+    attributes:
+      user:
+        email: "Email"
+        password: "Пароль"
+        password_confirmation: "Подтверждение пароля"
+        current_password: "Текущий пароль"
+        remember_me: "Запомнить меня"
+
+  simple_form:
+    "yes": "Да"
+    "no": "Нет"
+    required:
+      text: "обязательное поле"
+      mark: "*"
+    error_notification:
+      default_message: "Проверьте, пожалуйста, заполнение формы."
