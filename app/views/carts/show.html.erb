@@ -1,65 +1,98 @@
 <% content_for :title, "Моя корзина" %>
 
-<h1 class="h3 mb-4">Корзина</h1>
+<h1 class="section-title h2 mb-4">Корзина</h1>
 
 <% if @cart.empty? %>
-  <div class="text-center text-body-secondary py-5">
-    <i class="bi bi-bag fs-1 d-block mb-3" aria-hidden="true"></i>
-    <p class="mb-3">Корзина пуста</p>
-    <%= link_to "Перейти к товарам", root_path, class: "btn btn-primary" %>
+  <div class="empty-state panel">
+    <div class="empty-state__icon"><i class="bi bi-bag" aria-hidden="true"></i></div>
+    <p class="mb-3 text-body-secondary">В корзине пока пусто</p>
+    <%= link_to "Перейти к товарам", root_path, class: "btn btn-primary btn-lg" %>
   </div>
 <% else %>
-  <table class="table align-middle mb-3">
-    <thead>
-      <tr>
-        <th scope="col">Товар</th>
-        <th scope="col" class="text-end">Цена</th>
-        <th scope="col" class="text-end">Кол-во</th>
-        <th scope="col" class="text-end">Сумма</th>
-        <th scope="col"><span class="visually-hidden">Удалить</span></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @cart.each do |item| %>
-        <tr>
-          <td><%= link_to item.product.name, item.product %></td>
-          <td class="text-end"><%= price(item.product.price) %></td>
-          <td class="text-end">
-            <%= item.quantity %>
-            <div class="btn-group ms-2">
-              <%= link_to "-", decrease_cart_path(product_id: item.product.id), class: "btn btn-outline-secondary btn-sm", data: { turbo_method: :patch }  %>
-              <%= link_to "+", increase_cart_path(product_id: item.product.id), class: "btn btn-outline-secondary btn-sm", data: { turbo_method: :patch }  %>
-            </div>
-          </td>
-          <td class="text-end fw-semibold"><%= price(item.product.price.to_i * item.quantity) %></td>
-          <td class="text-end">
-            <%= button_to remove_cart_path(product_id: item.product.id), method: :delete,
-                  class: "btn btn-link text-danger p-0", aria: { label: "Удалить «#{item.product.name}» из корзины" } do %>
-              <i class="bi bi-trash-fill" aria-hidden="true"></i>
+  <% total = @cart.sum { |item| item.product.price.to_i * item.quantity } %>
+
+  <div class="row g-4">
+    <%# ── Список товаров ───────────────────────────────────────────────── %>
+    <div class="col-lg-8">
+      <div class="panel">
+        <% @cart.each do |item| %>
+          <div class="cart-row">
+            <%= link_to item.product, class: "flex-shrink-0" do %>
+              <%= image_tag item.product.picture.presence || placeholder_image(item.product.name, width: 144, height: 144),
+                    class: "cart-thumb", alt: item.product.name %>
             <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-    <tfoot>
-      <tr>
-        <th scope="row" colspan="3" class="text-end">Итого</th>
-        <td class="text-end fs-5 fw-bold">
-          <%= price(@cart.sum { |item| item.product.price.to_i * item.quantity }) %>
-        </td>
-        <td></td>
-      </tr>
-    </tfoot>
-  </table>
 
-  <% if user_signed_in? %>
+            <div class="flex-grow-1 min-w-0">
+              <%= link_to item.product.name, item.product, class: "fw-semibold text-body d-block text-truncate" %>
+              <div class="small text-body-secondary"><%= price(item.product.price) %> за штуку</div>
+            </div>
 
-    <div class="text-end">
-      <%= simple_form_for @order do |f| %>
-        <%= f.submit "Оформить заказ", class: "btn btn-primary btn-lg" %>
-      <% end %>
+            <div class="qty-stepper">
+              <%= link_to decrease_cart_path(product_id: item.product.id),
+                    class: "btn btn-light", data: { turbo_method: :patch },
+                    aria: { label: "Уменьшить количество" } do %>
+                <i class="bi bi-dash" aria-hidden="true"></i>
+              <% end %>
+              <span class="qty-stepper__value"><%= item.quantity %></span>
+              <%= link_to increase_cart_path(product_id: item.product.id),
+                    class: "btn btn-light", data: { turbo_method: :patch },
+                    aria: { label: "Увеличить количество" } do %>
+                <i class="bi bi-plus" aria-hidden="true"></i>
+              <% end %>
+            </div>
+
+            <div class="fw-bold text-end text-nowrap">
+              <%= price(item.product.price.to_i * item.quantity) %>
+            </div>
+
+            <%= button_to remove_cart_path(product_id: item.product.id), method: :delete,
+                  class: "btn btn-link btn-icon text-body-tertiary p-0",
+                  aria: { label: "Удалить «#{item.product.name}» из корзины" } do %>
+              <i class="bi bi-x-lg" aria-hidden="true"></i>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
     </div>
 
-  <% end %>
+    <%# ── Итоги ────────────────────────────────────────────────────────── %>
+    <div class="col-lg-4">
+      <div class="panel p-4 sticky-panel">
+        <h2 class="h5 mb-3">Итого</h2>
 
+        <div class="d-flex justify-content-between text-body-secondary mb-2">
+          <span>Товары, <%= @cart.sum(&:quantity) %> шт.</span>
+          <span><%= price(total) %></span>
+        </div>
+        <div class="d-flex justify-content-between text-body-secondary mb-3">
+          <span>Доставка</span>
+          <span class="text-success">Бесплатно</span>
+        </div>
+
+        <hr>
+
+        <div class="d-flex justify-content-between align-items-baseline mb-4">
+          <span class="fw-semibold">К оплате</span>
+          <span class="fs-3 fw-bold"><%= price(total) %></span>
+        </div>
+
+        <% if user_signed_in? %>
+          <%= simple_form_for @order, html: { class: "d-grid" } do |f| %>
+            <%= f.button :submit, "Оформить заказ", class: "btn btn-primary btn-lg" %>
+          <% end %>
+        <% else %>
+          <div class="d-grid gap-2">
+            <%= link_to "Войти и оформить", new_user_session_path, class: "btn btn-primary btn-lg" %>
+            <p class="small text-body-secondary text-center mb-0">
+              Заказ оформляется на аккаунт — так его проще отслеживать.
+            </p>
+          </div>
+        <% end %>
+
+        <%= link_to root_path, class: "btn btn-link w-100 mt-2 link-secondary" do %>
+          <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Продолжить покупки
+        <% end %>
+      </div>
+    </div>
+  </div>
 <% end %>

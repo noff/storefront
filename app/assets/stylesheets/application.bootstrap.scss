@@ -1,74 +1,10 @@
+// Порядок важен:
+//   functions — нужны для tint-color/shade-color в токенах;
+//   variables — наши значения перебивают !default бутстрапа;
+//   bootstrap — собирается уже с ними;
+//   theme     — доопределяет то, чего в бутстрапе нет.
+@import 'bootstrap/scss/functions';
+@import 'variables';
 @import 'bootstrap/scss/bootstrap';
 @import 'bootstrap-icons/font/bootstrap-icons';
-
-// Градиенты баннеров живут здесь, а не в инлайновых style —
-// иначе всё это отвалится, как только включат CSP с nonce на style-src.
-.hero-slide {
-  min-height: 360px;
-  background: linear-gradient(120deg, var(--hero-from), $gray-900);
-
-  &--sale     { --hero-from: #{$primary}; }
-  &--new      { --hero-from: #{$indigo}; }
-  &--delivery { --hero-from: #{$success}; }
-}
-
-.promo-banner {
-  max-width: 1100px;
-  background: linear-gradient(120deg, $gray-900, $primary);
-}
-
-// Картинки товаров одинаковой высоты, без искажений
-.product-image {
-  aspect-ratio: 1 / 1;
-  object-fit: cover;
-
-  &--wide {
-    aspect-ratio: 5 / 3;
-  }
-}
-
-// Главное фото на странице товара: contain, чтобы не срезать края товара
-.product-hero-image {
-  aspect-ratio: 1 / 1;
-  object-fit: contain;
-}
-
-// Лёгкий подъём карточки при наведении
-.product-card {
-  @media (prefers-reduced-motion: no-preference) {
-    transition: transform .15s ease, box-shadow .15s ease;
-  }
-
-  &:hover {
-    box-shadow: $box-shadow;
-
-    @media (prefers-reduced-motion: no-preference) {
-      transform: translateY(-4px);
-    }
-  }
-}
-
-// Сторис: градиентная рамка вокруг аватарки
-.story-ring {
-  background: linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
-}
-
-.story-item {
-  width: 96px;
-}
-
-// Лента скроллится горизонтально без видимого скроллбара.
-// Центрируем через margin, а не justify-content: center — иначе при переполнении
-// первые элементы уезжают за левый край области скролла и до них не докрутить.
-.stories-strip {
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
-  .stories-list {
-    width: fit-content;
-    margin-inline: auto;
-  }
-}
+@import 'theme';

@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="application-name" content="Storefront">
     <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#ffffff">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -23,64 +24,81 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="bg-body-tertiary">
-    <header class="navbar navbar-expand bg-body border-bottom sticky-top py-3">
-      <div class="container-fluid px-4 gap-3">
-        <%= link_to root_path, class: "navbar-brand d-flex align-items-center gap-2 m-0 fw-semibold" do %>
-          <i class="bi bi-shop fs-3 text-primary" aria-hidden="true"></i>
+  <body class="d-flex flex-column min-vh-100">
+    <header class="app-header sticky-top">
+      <div class="app-container d-flex align-items-center gap-3 py-2 py-lg-3">
+        <%= link_to root_path, class: "app-brand navbar-brand d-flex align-items-center gap-2 m-0 fw-bold fs-4 text-body" do %>
+          <i class="bi bi-bag-heart-fill fs-3 text-primary" aria-hidden="true"></i>
           <span class="d-none d-sm-inline">Storefront</span>
         <% end %>
 
         <%# TODO: обработчик q в home#index пока не реализован — форма возвращает на главную. %>
         <%= form_with url: root_path, method: :get, class: "flex-grow-1" do |f| %>
-          <div class="input-group">
+          <div class="search-pill d-flex align-items-center ps-3">
+            <i class="bi bi-search text-body-tertiary" aria-hidden="true"></i>
             <%= f.search_field :q, value: search_query, class: "form-control form-control-lg",
                   placeholder: "Поиск по товарам", "aria-label": "Поиск по товарам" %>
-            <button class="btn btn-primary px-4" type="submit" aria-label="Найти">
-              <i class="bi bi-search" aria-hidden="true"></i>
-            </button>
+            <button class="btn btn-primary d-none d-sm-inline-flex" type="submit">Найти</button>
           </div>
         <% end %>
 
-        <%= link_to cart_path, class: "btn btn-outline-secondary btn-lg position-relative" do %>
+        <%= link_to cart_path, class: "btn btn-light btn-icon position-relative fs-5",
+              aria: { label: "Корзина" } do %>
           <i class="bi bi-bag" aria-hidden="true"></i>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-            <%= current_cart.count %>
-            <span class="visually-hidden">товаров в корзине</span>
-          </span>
+          <% if current_cart.count.positive? %>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary">
+              <%= current_cart.count %>
+              <span class="visually-hidden">товаров в корзине</span>
+            </span>
+          <% end %>
         <% end %>
 
         <% if user_signed_in? %>
           <div class="dropdown">
-            <button class="btn btn-outline-secondary btn-lg dropdown-toggle" type="button"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="bi bi-person-circle" aria-hidden="true"></i>
-              <span class="d-none d-lg-inline ms-1"><%= current_user.email %></span>
+            <button class="btn btn-light btn-icon fs-5" type="button"
+                    data-bs-toggle="dropdown" aria-expanded="false" aria-label="Аккаунт">
+              <i class="bi bi-person" aria-hidden="true"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
+              <li class="dropdown-header dropdown-email text-truncate"><%= current_user.email %></li>
               <li><%= link_to "Профиль", edit_user_registration_path, class: "dropdown-item" %></li>
               <li><%= link_to "Мои заказы", orders_path, class: "dropdown-item" %></li>
               <li><hr class="dropdown-divider"></li>
               <li>
                 <%= button_to "Выйти", destroy_user_session_path, method: :delete,
-                      class: "dropdown-item" %>
+                      class: "dropdown-item text-danger" %>
               </li>
             </ul>
           </div>
         <% else %>
-          <%= link_to new_user_session_path, class: "btn btn-outline-secondary btn-lg text-nowrap" do %>
-            <i class="bi bi-box-arrow-in-right" aria-hidden="true"></i>
-            <span class="d-none d-md-inline ms-1">Войти</span>
+          <%= link_to new_user_session_path, class: "btn btn-light btn-icon fs-5 d-lg-none",
+                aria: { label: "Войти" } do %>
+            <i class="bi bi-person" aria-hidden="true"></i>
           <% end %>
+          <%= link_to "Войти", new_user_session_path, class: "btn btn-light text-nowrap d-none d-lg-inline-block" %>
           <%= link_to "Регистрация", new_user_registration_path,
-                class: "btn btn-primary btn-lg text-nowrap d-none d-md-inline-block" %>
+                class: "btn btn-primary text-nowrap d-none d-lg-inline-block" %>
         <% end %>
       </div>
+
+      <% if nav_categories.any? %>
+        <nav class="app-container pb-2 d-none d-md-block" aria-label="Категории">
+          <div class="scroll-x">
+            <ul class="list-unstyled d-flex gap-1 mb-0 w-max">
+              <% nav_categories.each do |category| %>
+                <li><%= link_to category.name, category, class: "nav-chip" %></li>
+              <% end %>
+            </ul>
+          </div>
+        </nav>
+      <% end %>
     </header>
 
-    <main class="container-fluid px-4 py-4">
+    <main class="app-container py-4 py-lg-5 flex-grow-1">
       <%= render "shared/flash" %>
       <%= yield %>
     </main>
+
+    <%= render "shared/footer" %>
   </body>
 </html>

@@ -1,30 +1,70 @@
 <% content_for :title, "Заказ #{@order.id}" %>
 
-<h1>Заказ <%= @order.id %></h1>
+<nav class="mb-3" aria-label="Хлебные крошки">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link_to "Главная", root_path, class: "link-secondary" %></li>
+    <li class="breadcrumb-item"><%= link_to "Мои заказы", orders_path, class: "link-secondary" %></li>
+    <li class="breadcrumb-item active" aria-current="page">Заказ №<%= @order.id %></li>
+  </ol>
+</nav>
 
-<table class="table">
-  <thead>
-  <tr>
-    <th>Товар</th>
-    <th class="text-end">Количество</th>
-    <th class="text-end">Цена</th>
-    <th class="text-end">Итого</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @order.order_items.order(:id).each do |order_item| %>
-    <tr>
-      <td>
-        <% if order_item.product.present? %>
-          <%= link_to order_item.product.name, order_item.product %>
-        <% else %>
-          Товар удален
-        <% end %>
-      </td>
-      <td class="text-end"><%= order_item.quantity %></td>
-      <td class="text-end"><%= order_item.price %></td>
-      <td class="text-end"><%= order_item.price * order_item.quantity %></td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
+<div class="d-flex flex-wrap align-items-center gap-3 mb-4">
+  <h1 class="section-title h2 me-auto">Заказ №<%= @order.id %></h1>
+  <span class="badge text-bg-success-subtle text-success-emphasis">
+    <i class="bi bi-check-circle me-1" aria-hidden="true"></i>Оформлен
+  </span>
+  <span class="text-body-secondary small">
+    <i class="bi bi-calendar3 me-1" aria-hidden="true"></i><%= l @order.created_at, format: "%d.%m.%Y" %>
+  </span>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="panel">
+      <% @order.order_items.order(:id).each do |order_item| %>
+        <div class="cart-row">
+          <div class="flex-grow-1 min-w-0">
+            <% if order_item.product.present? %>
+              <%= link_to order_item.product.name, order_item.product,
+                    class: "fw-semibold text-body d-block text-truncate" %>
+            <% else %>
+              <span class="fw-semibold text-body-secondary">Товар удалён</span>
+            <% end %>
+            <div class="small text-body-secondary">
+              <%= price(order_item.price) %> × <%= order_item.quantity %> шт.
+            </div>
+          </div>
+
+          <div class="fw-bold text-end text-nowrap">
+            <%= price(order_item.price * order_item.quantity) %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="panel p-4 sticky-panel">
+      <%# Считаем по позициям: total у заказа может быть ещё не проставлен. %>
+      <% total = @order.total || @order.order_items.sum { |item| item.price.to_i * item.quantity.to_i } %>
+      <h2 class="h5 mb-3">Сумма заказа</h2>
+      <div class="d-flex justify-content-between text-body-secondary mb-2">
+        <span>Товары</span>
+        <span><%= price(total) %></span>
+      </div>
+      <div class="d-flex justify-content-between text-body-secondary mb-3">
+        <span>Доставка</span>
+        <span class="text-success">Бесплатно</span>
+      </div>
+      <hr>
+      <div class="d-flex justify-content-between align-items-baseline">
+        <span class="fw-semibold">Итого</span>
+        <span class="fs-3 fw-bold"><%= price(total) %></span>
+      </div>
+
+      <%= link_to orders_path, class: "btn btn-light w-100 mt-4" do %>
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i>Ко всем заказам
+      <% end %>
+    </div>
+  </div>
+</div>

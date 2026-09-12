@@ -1,24 +1,13 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Пример создания простого интернет-магазина на Ruby-on-Rails. 
 
-Things you may want to cover:
+Скринкаст процесса: TBD
 
-* Ruby version
+## Запуск проекта на локалке
 
-* System dependencies
+```
+bin/dev
+```
 
-* Configuration
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...

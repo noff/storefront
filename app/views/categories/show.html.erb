@@ -1,20 +1,21 @@
 <% content_for :title, @category.name %>
 
-<h1 class="mb-3"><%= @category.name %></h1>
-
-<% if @breadcrumbs.any? %>
-  <section class="mb-3">
+<nav class="mb-3" aria-label="Хлебные крошки">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><%= link_to "Главная", root_path, class: "link-secondary" %></li>
     <% @breadcrumbs.each do |category| %>
-      <%= link_to category.name, category %>
-      <i class="bi bi-arrow-right"></i>
+      <li class="breadcrumb-item"><%= link_to category.name, category, class: "link-secondary" %></li>
     <% end %>
-    <%= @category.name %>
-  </section>
-<% end %>
+    <li class="breadcrumb-item active" aria-current="page"><%= @category.name %></li>
+  </ol>
+</nav>
+
+<h1 class="section-title h2 mb-4"><%= @category.name %></h1>
 
 <% if @subcategories.exists? %>
   <section class="mb-5">
-    <div class="row row-cols-1 row-cols-md-6 g-4">
+    <h2 class="h6 text-body-secondary text-uppercase mb-3">Подкатегории</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4 g-3">
       <% @subcategories.each do |category| %>
         <%= render "category_card", category: category %>
       <% end %>
@@ -24,14 +25,23 @@
 
 <% if @products.exists? %>
   <section>
-    <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-4">
+    <div class="d-flex align-items-center justify-content-between gap-3 mb-3">
+      <h2 class="section-title h4">Товары</h2>
+      <span class="text-body-secondary small"><%= @products.size %> шт.</span>
+    </div>
+
+    <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-3 g-lg-4">
       <% @products.each do |product| %>
         <div class="col">
-          <div class="h-100 shadow-sm rounded-4">
-            <%= render "home/product_card", product: product %>
-          </div>
+          <%= render "home/product_card", product: product %>
         </div>
       <% end %>
     </div>
   </section>
+<% elsif !@subcategories.exists? %>
+  <div class="empty-state panel">
+    <div class="empty-state__icon"><i class="bi bi-box-seam" aria-hidden="true"></i></div>
+    <p class="mb-3 text-body-secondary">В этой категории пока нет товаров</p>
+    <%= link_to "Вернуться на главную", root_path, class: "btn btn-primary" %>
+  </div>
 <% end %>

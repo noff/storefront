@@ -1,0 +1,139 @@
+// Дизайн-токены магазина.
+// Файл подключается ДО bootstrap: все переменные ниже перебивают его !default.
+// Менять оформление магазина нужно здесь, а не в вёрстке.
+
+// ── Палитра ────────────────────────────────────────────────────────────
+$primary:   #5b3df5; // акцент: кнопки, ссылки, активные состояния
+$secondary: #6b6880;
+$success:   #0f9d6b;
+$info:      #3b82f6;
+$warning:   #f5a524;
+$danger:    #e5484d;
+$light:     #f5f4f1;
+$dark:      #16151c;
+
+// Нейтрали смещены в тёплый: холст не «больничный», а песочный.
+$white:    #fff;
+$gray-100: #f7f6f3;
+$gray-200: #eeece7;
+$gray-300: #e2dfd8;
+$gray-400: #cbc7bd;
+$gray-500: #9c98a3;
+$gray-600: #6b6880;
+$gray-700: #4a4857;
+$gray-800: #2b2a35;
+$gray-900: #16151c;
+
+$body-bg:               $white;
+$body-color:            $gray-900;
+$body-secondary-color:  rgba($gray-900, .64);
+$body-tertiary-color:   rgba($gray-900, .42);
+$body-secondary-bg:     $gray-100;
+$body-tertiary-bg:      #f6f5f2; // фон страницы (body.bg-body-tertiary)
+$border-color:          $gray-200;
+
+// ── Типографика ────────────────────────────────────────────────────────
+$font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+                         "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+                         "Apple Color Emoji", "Segoe UI Emoji";
+$font-size-base:      1rem;
+$line-height-base:    1.55;
+$headings-font-weight: 650;
+$headings-line-height: 1.2;
+$lead-font-weight:     400;
+$display-font-weight:  700;
+
+// ── Геометрия ──────────────────────────────────────────────────────────
+// Крупные скругления — основа «мягкого» вида. rounded-3/4/5 в вёрстке
+// берут значения отсюда.
+$border-radius:     .75rem;
+$border-radius-sm:  .5rem;
+$border-radius-lg:  1rem;
+$border-radius-xl:  1.25rem;
+$border-radius-xxl: 1.75rem;
+$border-radius-pill: 50rem;
+
+$spacer: 1rem;
+
+// ── Тени ───────────────────────────────────────────────────────────────
+// Многослойные и низкоконтрастные: глубина вместо рамок.
+$box-shadow-sm: 0 1px 2px rgba($gray-900, .05), 0 1px 3px rgba($gray-900, .04);
+$box-shadow:    0 6px 24px rgba($gray-900, .07), 0 2px 6px rgba($gray-900, .04);
+$box-shadow-lg: 0 18px 48px rgba($gray-900, .12), 0 4px 12px rgba($gray-900, .05);
+
+// ── Ссылки ─────────────────────────────────────────────────────────────
+$link-color:            $primary;
+$link-decoration:       none;
+$link-hover-decoration: underline;
+
+// ── Кнопки ─────────────────────────────────────────────────────────────
+$btn-font-weight:        600;
+$btn-border-radius:      $border-radius-pill;
+$btn-border-radius-sm:   $border-radius-pill;
+$btn-border-radius-lg:   $border-radius-pill;
+$btn-padding-x:          1.25rem;
+$btn-padding-y:          .55rem;
+$btn-padding-x-lg:       1.75rem;
+$btn-padding-y-lg:       .75rem;
+$btn-font-size-lg:       1rem;
+$btn-focus-width:        .2rem;
+
+// ── Формы ──────────────────────────────────────────────────────────────
+$input-bg:                   $white;
+$input-border-color:         $gray-300;
+$input-border-radius:        $border-radius;
+$input-border-radius-lg:     $border-radius-pill;
+$input-padding-y:            .6rem;
+$input-padding-x:            .9rem;
+$input-font-size-lg:         1rem;
+$input-padding-y-lg:         .7rem;
+$input-padding-x-lg:         1.15rem;
+$input-focus-border-color:   tint-color($primary, 45%);
+$input-focus-box-shadow:     0 0 0 .2rem rgba($primary, .15);
+$form-label-font-weight:     600;
+$form-label-font-size:       .875rem;
+$form-label-margin-bottom:   .4rem;
+
+// ── Карточки ───────────────────────────────────────────────────────────
+$card-bg:             $white;
+$card-border-width:   0;
+$card-border-radius:  $border-radius-xl;
+$card-spacer-x:       1.25rem;
+$card-spacer-y:       1.25rem;
+$card-cap-bg:         transparent;
+
+// ── Прочие компоненты ──────────────────────────────────────────────────
+$badge-font-weight:      600;
+$badge-border-radius:    $border-radius-pill;
+$badge-padding-x:        .65em;
+$badge-padding-y:        .38em;
+
+$alert-border-width:     0;
+$alert-border-radius:    $border-radius-lg;
+$alert-padding-x:        1.15rem;
+
+$dropdown-border-width:  0;
+$dropdown-border-radius: $border-radius-lg;
+$dropdown-box-shadow:    $box-shadow-lg;
+$dropdown-padding-y:     .5rem;
+$dropdown-item-padding-y: .5rem;
+$dropdown-item-padding-x: 1rem;
+$dropdown-link-hover-bg: $gray-100;
+
+$table-cell-padding-y:   .85rem;
+$table-border-color:     $border-color;
+
+$nav-link-font-weight:   500;
+$nav-link-color:         $gray-700;
+$nav-link-hover-color:   $primary;
+
+$breadcrumb-divider:              quote(">");
+$breadcrumb-divider-color:        $gray-400;
+$breadcrumb-active-color:         $gray-600;
+$breadcrumb-font-size:            .875rem;
+$breadcrumb-margin-bottom:        0;
+
+$carousel-control-opacity:        .75;
+$carousel-indicator-width:        24px;
+$carousel-indicator-height:       4px;
+$carousel-indicator-active-bg:    $white;

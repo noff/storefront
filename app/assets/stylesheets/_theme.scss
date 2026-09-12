@@ -1,0 +1,455 @@
+// Слой темы: подключается ПОСЛЕ bootstrap.
+// Здесь только то, чего в бутстрапе нет — градиенты, размеры каркаса, движение.
+// Всё настраиваемое вынесено в CSS-переменные :root, чтобы вид правился
+// в одном месте и без пересборки вёрстки.
+
+:root {
+  --sf-content-max: 1360px;   // ширина контентной колонки
+  --sf-gutter: 1.5rem;        // боковые отступы каркаса
+  --sf-hero-min: 420px;       // высота герой-карусели
+  --sf-header-h: 112px;       // высота липкой шапки (под неё отступают sticky-панели)
+  --sf-speed: .2s;            // базовая скорость анимаций
+  --sf-lift: -4px;            // подъём карточки при наведении
+  --sf-zoom: 1.06;            // зум картинки товара при наведении
+
+  --sf-surface: #{$white};            // карточки и панели
+  --sf-canvas: #{$body-tertiary-bg};  // фон страницы
+  --sf-ink: #{$gray-900};
+  --sf-line: #{$border-color};
+
+  // Градиенты. Меняются здесь — и меняются во всех баннерах сразу.
+  --sf-grad-sale:     linear-gradient(135deg, #{$primary} 0%, #{shade-color($primary, 45%)} 100%);
+  --sf-grad-new:      linear-gradient(135deg, #0ea5e9 0%, #{$gray-900} 100%);
+  --sf-grad-delivery: linear-gradient(135deg, #{$success} 0%, #{shade-color($success, 45%)} 100%);
+  --sf-grad-promo:    linear-gradient(120deg, #{$gray-900} 0%, #{$primary} 100%);
+  --sf-grad-story:    linear-gradient(45deg, #f9ce34, #ee2a7b, #6228d7);
+}
+
+body {
+  background-color: var(--sf-canvas);
+  -webkit-font-smoothing: antialiased;
+}
+
+// Заголовки чуть плотнее по трекингу — так они читаются «дороже».
+h1, h2, h3, .display-1, .display-2, .display-3, .display-4, .display-5, .display-6 {
+  letter-spacing: -.02em;
+}
+
+// ── Каркас ─────────────────────────────────────────────────────────────
+.app-container {
+  width: 100%;
+  max-width: var(--sf-content-max);
+  margin-inline: auto;
+  padding-inline: var(--sf-gutter);
+}
+
+// Полупрозрачная «стеклянная» шапка. Фолбэк — сплошной фон,
+// backdrop-filter включается только там, где поддерживается.
+.app-header {
+  background-color: var(--sf-surface);
+  border-bottom: 1px solid var(--sf-line);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .app-header {
+    background-color: rgba($white, .82);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+  }
+}
+
+.app-brand {
+  letter-spacing: -.03em;
+}
+
+// Поисковая строка: одна пилюля вместо input-group с рамками.
+.search-pill {
+  background-color: var(--sf-canvas);
+  border: 1px solid transparent;
+  border-radius: $border-radius-pill;
+  transition: border-color var(--sf-speed) ease, background-color var(--sf-speed) ease;
+
+  &:focus-within {
+    background-color: var(--sf-surface);
+    border-color: tint-color($primary, 45%);
+    box-shadow: 0 0 0 .2rem rgba($primary, .12);
+  }
+
+  .form-control {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+}
+
+// Круглые кнопки-иконки в шапке и на карточках.
+.btn-icon {
+  --bs-btn-padding-x: .65rem;
+  --bs-btn-padding-y: .65rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+// Чипы категорий во второй строке шапки.
+.nav-chip {
+  display: inline-block;
+  padding: .35rem .85rem;
+  border-radius: $border-radius-pill;
+  color: $gray-700;
+  font-size: .9375rem;
+  font-weight: 500;
+  white-space: nowrap;
+  transition: background-color var(--sf-speed) ease, color var(--sf-speed) ease;
+
+  &:hover,
+  &:focus-visible {
+    background-color: var(--sf-canvas);
+    color: $primary;
+    text-decoration: none;
+  }
+}
+
+// Горизонтальные ленты (чипы, сторис) без видимого скроллбара.
+.scroll-x {
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+// Ряд внутри .scroll-x должен быть шире контейнера, иначе он сожмётся
+// по ширине родителя и скроллить будет нечего.
+.w-max { width: max-content; }
+
+.dropdown-email { max-width: 16rem; }
+
+// Без min-width: 0 флекс-элемент не даёт text-truncate обрезать длинное название.
+.min-w-0 { min-width: 0; }
+
+.app-footer {
+  background-color: $gray-900;
+  color: rgba($white, .72);
+
+  a {
+    color: rgba($white, .72);
+
+    &:hover { color: $white; }
+  }
+}
+
+// ── Секции ─────────────────────────────────────────────────────────────
+.section-title {
+  letter-spacing: -.02em;
+  margin-bottom: 0;
+}
+
+.section-link {
+  font-weight: 600;
+  font-size: .9375rem;
+  white-space: nowrap;
+}
+
+// ── Герой и баннеры ────────────────────────────────────────────────────
+.hero-slide {
+  min-height: var(--sf-hero-min);
+  background: var(--sf-grad-sale);
+  color: $white;
+
+  &--sale     { background: var(--sf-grad-sale); }
+  &--new      { background: var(--sf-grad-new); }
+  &--delivery { background: var(--sf-grad-delivery); }
+}
+
+// Мягкое световое пятно поверх градиента — чтобы плашка не выглядела плоской.
+.hero-slide::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(120% 80% at 85% 15%, rgba($white, .28), transparent 60%);
+  pointer-events: none;
+}
+
+// Стрелки карусели по умолчанию занимают по 15% ширины слайда и наезжают
+// на текст. Превращаем их в пару круглых кнопок в правом нижнем углу.
+.carousel-control-prev,
+.carousel-control-next {
+  top: auto;
+  bottom: 1.25rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background-color: rgba($white, .18);
+  opacity: 1;
+  transition: background-color var(--sf-speed) ease;
+
+  &:hover,
+  &:focus-visible { background-color: rgba($white, .32); }
+}
+
+.carousel-control-prev { left: auto; right: 4.5rem; }
+.carousel-control-next { right: 1.25rem; }
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.carousel-indicators {
+  justify-content: flex-start;
+  margin-left: 1.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.promo-banner {
+  background: var(--sf-grad-promo);
+  color: $white;
+}
+
+// ── Карточка товара ────────────────────────────────────────────────────
+.product-card {
+  background-color: var(--sf-surface);
+  border-radius: $border-radius-xl;
+  overflow: hidden;
+  box-shadow: $box-shadow-sm;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--sf-speed) ease, box-shadow var(--sf-speed) ease;
+  }
+
+  &:hover {
+    box-shadow: $box-shadow;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transform: translateY(var(--sf-lift));
+    }
+
+    .product-card__img { transform: scale(var(--sf-zoom)); }
+  }
+}
+
+.product-card__media {
+  overflow: hidden;
+  background-color: var(--sf-canvas);
+}
+
+.product-card__img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform .45s ease;
+  }
+
+  &--wide { aspect-ratio: 5 / 3; }
+}
+
+// Название в две строки максимум: иначе карточки в сетке разъезжаются.
+.product-card__title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Кнопка «в избранное» проявляется на карточке, но на тач-устройствах
+// (где нет hover) видна всегда.
+.product-card__fav {
+  background-color: rgba($white, .9);
+  border: 0;
+  box-shadow: $box-shadow-sm;
+}
+
+@media (hover: hover) {
+  .product-card__fav {
+    opacity: 0;
+    transition: opacity var(--sf-speed) ease;
+  }
+
+  .product-card:hover .product-card__fav,
+  .product-card__fav:focus-visible { opacity: 1; }
+}
+
+// ── Плитка категории ───────────────────────────────────────────────────
+.category-tile {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  height: 100%;
+  padding: 1rem 1.15rem;
+  background-color: var(--sf-surface);
+  border-radius: $border-radius-lg;
+  box-shadow: $box-shadow-sm;
+  color: var(--sf-ink);
+  font-weight: 600;
+  line-height: 1.25;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--sf-speed) ease, box-shadow var(--sf-speed) ease;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: $primary;
+    text-decoration: none;
+    box-shadow: $box-shadow;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transform: translateY(var(--sf-lift));
+    }
+
+    .category-tile__arrow { transform: translateX(3px); }
+  }
+}
+
+.category-tile__icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: $border-radius;
+  background-color: rgba($primary, .1);
+  color: $primary;
+}
+
+.category-tile__arrow {
+  margin-left: auto;
+  color: $gray-400;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--sf-speed) ease;
+  }
+}
+
+// ── Сторис ─────────────────────────────────────────────────────────────
+.story-item { width: 92px; }
+
+.story-ring {
+  background: var(--sf-grad-story);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform var(--sf-speed) ease;
+  }
+}
+
+.story-item:hover .story-ring { transform: scale(1.05); }
+
+// Ленту центрируем через margin, а не justify-content: при переполнении
+// центрирование флексом прячет первые элементы за левым краем скролла.
+.stories-list { margin-inline: auto; }
+
+// ── Страница товара ────────────────────────────────────────────────────
+.product-gallery {
+  background-color: var(--sf-surface);
+  border-radius: $border-radius-xxl;
+  box-shadow: $box-shadow-sm;
+}
+
+// contain, а не cover: у товара нельзя срезать края.
+// max-height — чтобы на широких экранах фото не разъезжалось на весь экран.
+.product-hero-image {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-height: 560px;
+  object-fit: contain;
+}
+
+.specs-list > div:last-child { border-bottom: 0 !important; }
+
+// Панель покупки едет за скроллом только там, где для неё есть высота.
+@include media-breakpoint-up(lg) {
+  .sticky-panel {
+    position: sticky;
+    top: calc(var(--sf-header-h, 80px) + 1.5rem);
+  }
+}
+
+// ── Корзина и заказы ───────────────────────────────────────────────────
+.panel {
+  background-color: var(--sf-surface);
+  border-radius: $border-radius-xl;
+  box-shadow: $box-shadow-sm;
+}
+
+.cart-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--sf-line);
+
+  &:last-child { border-bottom: 0; }
+}
+
+.cart-thumb {
+  flex: 0 0 auto;
+  width: 72px;
+  height: 72px;
+  border-radius: $border-radius;
+  object-fit: cover;
+  background-color: var(--sf-canvas);
+}
+
+// Степпер количества: цифра между двумя кнопками, без прыжков ширины.
+.qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--sf-canvas);
+  border-radius: $border-radius-pill;
+  padding: .15rem;
+
+  .btn {
+    --bs-btn-padding-x: .55rem;
+    --bs-btn-padding-y: .1rem;
+    border: 0;
+    border-radius: 50%;
+    line-height: 1.2;
+  }
+
+  &__value {
+    min-width: 2ch;
+    text-align: center;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+// ── Формы авторизации ──────────────────────────────────────────────────
+.auth-card {
+  background-color: var(--sf-surface);
+  border-radius: $border-radius-xxl;
+  box-shadow: $box-shadow;
+}
+
+.auth-icon {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: $border-radius-lg;
+  background-color: rgba($primary, .1);
+  color: $primary;
+  font-size: 1.35rem;
+}
+
+// ── Пустые состояния ───────────────────────────────────────────────────
+.empty-state {
+  padding: 4rem 1.5rem;
+  text-align: center;
+
+  &__icon {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    margin: 0 auto 1.25rem;
+    border-radius: 50%;
+    background-color: var(--sf-canvas);
+    color: $gray-500;
+    font-size: 1.75rem;
+  }
+}

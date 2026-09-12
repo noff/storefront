@@ -1,22 +1,37 @@
 <% content_for :title, "Мои заказы" %>
 
-<h1>Мои заказы</h1>
+<h1 class="section-title h2 mb-4">Мои заказы</h1>
 
-<table class="table">
-  <thead>
-  <tr>
-    <th>Заказ</th>
-    <th>Дата</th>
-    <th class="text-end">Сумма</th>
-  </tr>
-  </thead>
-  <tbody>
-  <% @orders.each do |order| %>
-  <tr>
-    <td><%= link_to "Заказ #{order.id}", order %></td>
-    <td><%= l order.created_at %></td>
-    <td class="text-end"><%= order.total %></td>
-  </tr>
-  <% end %>
-  </tbody>
-</table>
+<% if @orders.empty? %>
+  <div class="empty-state panel">
+    <div class="empty-state__icon"><i class="bi bi-receipt" aria-hidden="true"></i></div>
+    <p class="mb-3 text-body-secondary">Заказов пока нет</p>
+    <%= link_to "Перейти к товарам", root_path, class: "btn btn-primary btn-lg" %>
+  </div>
+<% else %>
+  <div class="d-flex flex-column gap-3">
+    <% @orders.each do |order| %>
+      <div class="panel p-4 d-flex flex-wrap align-items-center gap-3">
+        <div class="me-auto">
+          <div class="fw-semibold">
+            <%= link_to "Заказ №#{order.id}", order, class: "text-body" %>
+          </div>
+          <div class="small text-body-secondary">
+            <i class="bi bi-calendar3 me-1" aria-hidden="true"></i><%= l order.created_at, format: "%d.%m.%Y" %>
+          </div>
+        </div>
+
+        <span class="badge text-bg-success-subtle text-success-emphasis">
+          <i class="bi bi-check-circle me-1" aria-hidden="true"></i>Оформлен
+        </span>
+
+        <%# total проставляется после создания позиций — у полупустого заказа его может не быть. %>
+        <div class="fs-5 fw-bold text-nowrap"><%= order.total ? price(order.total) : "—" %></div>
+
+        <%= link_to order, class: "btn btn-light" do %>
+          Подробнее<i class="bi bi-arrow-right ms-1" aria-hidden="true"></i>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,95 +1,117 @@
 <% content_for :title, @product.name %>
 
 <% specs = @product.parsed_params %>
+<% in_cart = current_cart.any? { |item| item.product.id == @product.id } %>
 
+<%# Без категории крошки не имеют смысла — не рисуем их вовсе. %>
 <% if @breadcrumbs.any? %>
-  <nav class="mb-3 small" aria-label="Хлебные крошки">
-    <%= link_to "Главная", root_path, class: "link-secondary text-decoration-none" %>
-    <% @breadcrumbs.each do |category| %>
-      <i class="bi bi-chevron-right mx-1 text-body-tertiary" aria-hidden="true"></i>
-      <%= link_to category.name, category, class: "link-secondary text-decoration-none" %>
-    <% end %>
-    <i class="bi bi-chevron-right mx-1 text-body-tertiary" aria-hidden="true"></i>
-    <span class="text-body-secondary"><%= @product.name %></span>
+  <nav class="mb-4" aria-label="Хлебные крошки">
+    <ol class="breadcrumb flex-nowrap overflow-hidden">
+      <li class="breadcrumb-item"><%= link_to "Главная", root_path, class: "link-secondary" %></li>
+      <% @breadcrumbs.each do |category| %>
+        <li class="breadcrumb-item"><%= link_to category.name, category, class: "link-secondary" %></li>
+      <% end %>
+      <li class="breadcrumb-item active text-truncate" aria-current="page"><%= @product.name %></li>
+    </ol>
   </nav>
 <% end %>
 
 <section class="row g-4 g-lg-5 mb-5">
   <%# ── Фото ─────────────────────────────────────────────────────────── %>
-  <div class="col-lg-6">
-    <div class="bg-body rounded-4 shadow-sm overflow-hidden position-relative p-3">
+  <div class="col-lg-7">
+    <div class="product-gallery position-relative overflow-hidden p-3 p-lg-4">
       <%= image_tag @product.picture.presence || placeholder_image(@product.name, width: 800, height: 800),
-            class: "w-100 product-hero-image", alt: @product.name %>
+            class: "product-hero-image", alt: @product.name %>
       <% if @product.discount %>
-        <span class="badge text-bg-danger position-absolute top-0 start-0 m-3">−<%= @product.discount %>%</span>
+        <span class="badge text-bg-danger position-absolute top-0 start-0 m-3 fs-6">−<%= @product.discount %>%</span>
       <% end %>
     </div>
   </div>
 
-  <%# ── Информация ───────────────────────────────────────────────────── %>
-  <div class="col-lg-6">
-    <% if @product.vendor.present? %>
-      <div class="text-body-secondary small mb-1"><%= @product.vendor %></div>
-    <% end %>
-
-    <h1 class="h2 mb-3"><%= @product.name %></h1>
-
-    <% if @product.rating.present? %>
-      <div class="mb-3"><%= rating_stars(@product.rating) %></div>
-    <% end %>
-
-    <div class="mb-3">
-      <span class="fs-2 fw-bold"><%= price(@product.price) %></span>
-      <% if @product.old_price %>
-        <span class="text-body-secondary text-decoration-line-through fs-5 ms-2">
-          <%= price(@product.old_price) %>
-        </span>
+  <%# ── Покупка ──────────────────────────────────────────────────────── %>
+  <div class="col-lg-5">
+    <div class="sticky-panel">
+      <% if @product.vendor.present? %>
+        <div class="text-body-secondary small text-uppercase mb-1"><%= @product.vendor %></div>
       <% end %>
-    </div>
 
-    <hr class="my-4">
+      <h1 class="h2 mb-3"><%= @product.name %></h1>
 
-    <div class="mb-3">
-      <% if @product.available %>
-        <span class="badge text-bg-success-subtle text-success-emphasis">
-          <i class="bi bi-check-circle me-1" aria-hidden="true"></i>В наличии
-        </span>
-      <% else %>
-        <span class="badge text-bg-secondary-subtle text-body-secondary">
-          <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Нет в наличии
-        </span>
-      <% end %>
-    </div>
-
-    <% if current_cart.any? { |item| item.product.id == @product.id } %>
-      <%= button_to remove_cart_path(product_id: @product.id), method: :delete,
-            class: "btn btn-warning btn-lg w-100", form_class: "d-grid" do %>
-        <i class="bi bi-bag-dash me-2" aria-hidden="true"></i>Удалить из корзины
-      <% end %>
-    <% else %>
-      <%= button_to add_cart_path(product_id: @product.id), method: :patch,
-            class: "btn btn-primary btn-lg w-100", form_class: "d-grid" do %>
-        <i class="bi bi-bag-plus me-2" aria-hidden="true"></i>В корзину
-      <% end %>
-    <% end %>
-
-    <% if specs.any? %>
-      <hr class="my-4">
-      <h2 class="h6 fw-semibold mb-3">Характеристики</h2>
-      <dl class="row row-cols-1 mb-0 small">
-        <% specs.each do |spec| %>
-          <div class="col d-flex gap-2 border-bottom py-2">
-            <dt class="fw-normal text-body-secondary flex-shrink-0"><%= spec["name"] %></dt>
-            <dd class="mb-0 ms-auto text-end"><%= spec["value"] %></dd>
-          </div>
+      <div class="d-flex align-items-center gap-3 mb-4">
+        <% if @product.rating.present? %>
+          <%= rating_stars(@product.rating) %>
         <% end %>
-      </dl>
+        <% if @product.available %>
+          <span class="badge text-bg-success-subtle text-success-emphasis">
+            <i class="bi bi-check-circle me-1" aria-hidden="true"></i>В наличии
+          </span>
+        <% else %>
+          <span class="badge text-bg-secondary-subtle text-body-secondary">
+            <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Нет в наличии
+          </span>
+        <% end %>
+      </div>
+
+      <div class="panel p-4 mb-4">
+        <div class="d-flex align-items-baseline gap-2 mb-3">
+          <span class="display-6 fw-bold"><%= price(@product.price) %></span>
+          <% if @product.old_price %>
+            <span class="text-body-tertiary text-decoration-line-through fs-5">
+              <%= price(@product.old_price) %>
+            </span>
+          <% end %>
+        </div>
+
+        <% if in_cart %>
+          <div class="d-grid gap-2">
+            <%= button_to remove_cart_path(product_id: @product.id), method: :delete,
+                  class: "btn btn-light btn-lg", form_class: "d-grid" do %>
+              <i class="bi bi-bag-dash me-2" aria-hidden="true"></i>Убрать из корзины
+            <% end %>
+            <%= link_to "Перейти в корзину", cart_path, class: "btn btn-primary btn-lg" %>
+          </div>
+        <% else %>
+          <%= button_to add_cart_path(product_id: @product.id), method: :patch,
+                class: "btn btn-primary btn-lg", form_class: "d-grid" do %>
+            <i class="bi bi-bag-plus me-2" aria-hidden="true"></i>Добавить в корзину
+          <% end %>
+        <% end %>
+
+        <ul class="list-unstyled small text-body-secondary d-flex flex-column gap-2 mt-4 mb-0">
+          <li><i class="bi bi-truck me-2 text-primary" aria-hidden="true"></i>Доставка по России от 1 дня</li>
+          <li><i class="bi bi-shield-check me-2 text-primary" aria-hidden="true"></i>Гарантия 2 года</li>
+          <li><i class="bi bi-arrow-counterclockwise me-2 text-primary" aria-hidden="true"></i>Возврат в течение 14 дней</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<% if specs.any? || @product.description.present? %>
+  <section class="row g-4">
+    <% if specs.any? %>
+      <div class="col-lg-7">
+        <div class="panel p-4">
+          <h2 class="h5 mb-3">Характеристики</h2>
+          <dl class="specs-list row row-cols-1 mb-0 small">
+            <% specs.each do |spec| %>
+              <div class="col d-flex gap-3 border-bottom py-2">
+                <dt class="fw-normal text-body-secondary flex-shrink-0"><%= spec["name"] %></dt>
+                <dd class="mb-0 ms-auto text-end fw-medium"><%= spec["value"] %></dd>
+              </div>
+            <% end %>
+          </dl>
+        </div>
+      </div>
     <% end %>
 
     <% if @product.description.present? %>
-      <hr class="my-4">
-      <h2 class="h6 fw-semibold mb-2">Описание</h2>
-      <p class="text-body-secondary mb-0"><%= @product.description %></p>
+      <div class="col-lg-5">
+        <div class="panel p-4 h-100">
+          <h2 class="h5 mb-3">Описание</h2>
+          <p class="text-body-secondary mb-0"><%= @product.description %></p>
+        </div>
+      </div>
     <% end %>
-  </div>
-</section>
+  </section>
+<% end %>

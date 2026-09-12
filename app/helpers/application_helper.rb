@@ -38,6 +38,16 @@ module ApplicationHelper
     params[:q] if params[:q].is_a?(String)
   end
 
+  # Корневые категории для навигации в шапке и подвале.
+  # Запрос один на рендер, limit режет уже загруженный список —
+  # иначе мемоизация отдала бы второму вызову чужое количество.
+  NAV_CATEGORIES_LIMIT = 9
+
+  def nav_categories(limit: NAV_CATEGORIES_LIMIT)
+    @nav_categories ||= Category.roots.order(:name).limit(NAV_CATEGORIES_LIMIT).to_a
+    @nav_categories.first(limit)
+  end
+
   def price(value)
     number_to_currency(value, unit: "₽", format: "%n %u", precision: 0, delimiter: " ")
   end
