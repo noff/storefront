@@ -9,4 +9,11 @@ class Product < ApplicationRecord
   rescue JSON::ParserError
     []
   end
+
+  # Возвращает процент скидки
+  # @return [Numeric, nil]
+  def discount
+    return if price.blank? || old_price.blank? || old_price <= price
+    (100.0 * (old_price - price) / old_price).floor
+  end
 end

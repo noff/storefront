@@ -1,4 +1,5 @@
-<% discount = discount_percent(@product.price, @product.old_price) %>
+<% content_for :title, @product.name %>
+
 <% specs = @product.parsed_params %>
 
 <% if @breadcrumbs.any? %>
@@ -19,8 +20,8 @@
     <div class="bg-body rounded-4 shadow-sm overflow-hidden position-relative p-3">
       <%= image_tag @product.picture.presence || placeholder_image(@product.name, width: 800, height: 800),
             class: "w-100 product-hero-image", alt: @product.name %>
-      <% if discount %>
-        <span class="badge text-bg-danger position-absolute top-0 start-0 m-3">−<%= discount %>%</span>
+      <% if @product.discount %>
+        <span class="badge text-bg-danger position-absolute top-0 start-0 m-3">−<%= @product.discount %>%</span>
       <% end %>
     </div>
   </div>

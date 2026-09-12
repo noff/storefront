@@ -33,13 +33,6 @@ module ApplicationHelper
              aria: { label: "Рейтинг #{value} из 5" })
   end
 
-  # Процент скидки; nil, когда скидки нет (тогда бейдж не рисуется).
-  def discount_percent(price, old_price)
-    return if price.blank? || old_price.blank? || old_price <= price
-
-    (100.0 * (old_price - price) / old_price).floor
-  end
-
   # ?q[]=x и ?q[a]=b дают Array/Parameters — в поле и в будущий SQL это пускать нельзя.
   def search_query
     params[:q] if params[:q].is_a?(String)

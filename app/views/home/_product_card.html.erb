@@ -1,6 +1,5 @@
 <%# Карточка товара. wide: true — широкая картинка (5:3), для блока «Товар дня». %>
 <% wide = local_assigns.fetch(:wide, false) %>
-<% discount = discount_percent(product.price, product.old_price) %>
 
 <div class="card h-100 border-0 rounded-4 overflow-hidden product-card">
   <div class="position-relative">
@@ -10,8 +9,8 @@
     <button class="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2" type="button" aria-label="Добавить «<%= product.name %>» в избранное">
       <i class="bi bi-heart" aria-hidden="true"></i>
     </button>
-    <% if discount %>
-      <span class="badge text-bg-danger position-absolute bottom-0 start-0 m-2">−<%= discount %>%</span>
+    <% if product.discount %>
+      <span class="badge text-bg-danger position-absolute bottom-0 start-0 m-2">−<%= product.discount %>%</span>
     <% end %>
   </div>
 
