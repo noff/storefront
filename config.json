@@ -1,0 +1,18 @@
+{
+  "id": "ws_106f0b27",
+  "name": "storefront",
+  "slug": "storefront",
+  "defaults": {
+    "permissionMode": "safe",
+    "cyclablePermissionModes": [
+      "safe",
+      "allow-all"
+    ],
+    "enabledSourceSlugs": []
+  },
+  "localMcpServers": {
+    "enabled": true
+  },
+  "createdAt": 1789204706202,
+  "updatedAt": 1789204706202
+}

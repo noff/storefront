@@ -1,0 +1,6 @@
+{
+  "allowedBashPatterns": [
+    { "pattern": "^(ls|cat|head|tail|grep|rg|find|tree|wc|file|stat)\\s", "comment": "Read-only filesystem inspection" },
+    { "pattern": "^git\\s+(status|log|diff|show|branch|remote)\\b", "comment": "Read-only git inspection" }
+  ]
+}

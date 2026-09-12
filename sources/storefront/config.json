@@ -1,0 +1,16 @@
+{
+  "id": "storefront_0fa26186",
+  "name": "Storefront",
+  "slug": "storefront",
+  "provider": "filesystem",
+  "type": "local",
+  "icon": "📁",
+  "tagline": "Local Rails storefront project folder (webdevblog/storefront)",
+  "enabled": true,
+  "local": {
+    "path": "~/Developer/webdevblog/storefront/storefront"
+  },
+  "lastTestedAt": 1789204778637,
+  "connectionStatus": "connected",
+  "updatedAt": 1789204778637
+}
