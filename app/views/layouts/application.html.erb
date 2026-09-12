@@ -59,6 +59,7 @@
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><%= link_to "Профиль", edit_user_registration_path, class: "dropdown-item" %></li>
+              <li><%= link_to "Мои заказы", orders_path, class: "dropdown-item" %></li>
               <li><hr class="dropdown-divider"></li>
               <li>
                 <%= button_to "Выйти", destroy_user_session_path, method: :delete,

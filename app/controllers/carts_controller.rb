@@ -1,6 +1,9 @@
 class CartsController < ApplicationController
   def show
     @cart = current_cart.sort_by { |x| x.product.name }
+    if user_signed_in?
+      @order = current_user.orders.new
+    end
   end
 
   def add

@@ -1,5 +1,6 @@
 class Product < ApplicationRecord
   belongs_to :category, optional: true
+  has_many :order_items, dependent: :nullify
 
   # params хранится как JSON-массив пар: [{"name" => "Цвет", "value" => "Черный"}, ...]
   # Массив, а не хеш: в фиде имена повторяются и порядок характеристик важен.

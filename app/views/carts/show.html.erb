@@ -7,7 +7,7 @@
     <%= link_to "Перейти к товарам", root_path, class: "btn btn-primary" %>
   </div>
 <% else %>
-  <table class="table align-middle">
+  <table class="table align-middle mb-3">
     <thead>
       <tr>
         <th scope="col">Товар</th>
@@ -49,4 +49,15 @@
       </tr>
     </tfoot>
   </table>
+
+  <% if user_signed_in? %>
+
+    <div class="text-end">
+      <%= simple_form_for @order do |f| %>
+        <%= f.submit "Оформить заказ", class: "btn btn-primary btn-lg" %>
+      <% end %>
+    </div>
+
+  <% end %>
+
 <% end %>

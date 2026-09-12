@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       patch :decrease
     end
   end
+  resources :orders, only: [:create, :show, :index, :destroy]
 
   # Defines the root path route ("/")
   root "home#index"

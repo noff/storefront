@@ -1,0 +1,28 @@
+<h1>Заказ <%= @order.id %></h1>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th>Товар</th>
+    <th class="text-end">Количество</th>
+    <th class="text-end">Цена</th>
+    <th class="text-end">Итого</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @order.order_items.order(:id).each do |order_item| %>
+    <tr>
+      <td>
+        <% if order_item.product.present? %>
+          <%= link_to order_item.product.name, order_item.product %>
+        <% else %>
+          Товар удален
+        <% end %>
+      </td>
+      <td class="text-end"><%= order_item.quantity %></td>
+      <td class="text-end"><%= order_item.price %></td>
+      <td class="text-end"><%= order_item.price * order_item.quantity %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
