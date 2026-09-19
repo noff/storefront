@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     end
   end
   resources :orders, only: [:create, :show, :index, :destroy]
+  resource :city, only: [:update]
 
   # Defines the root path route ("/")
   root "home#index"

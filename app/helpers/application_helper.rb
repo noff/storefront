@@ -44,7 +44,7 @@ module ApplicationHelper
   NAV_CATEGORIES_LIMIT = 9
 
   def nav_categories(limit: NAV_CATEGORIES_LIMIT)
-    @nav_categories ||= Category.roots.order(:name).limit(NAV_CATEGORIES_LIMIT).to_a
+    @nav_categories ||= Category.roots.where(ext_id: Category.where.not(parent_id: nil).select(:parent_id)).order(:name).limit(NAV_CATEGORIES_LIMIT).to_a
     @nav_categories.first(limit)
   end
 

@@ -32,6 +32,29 @@
           <span class="d-none d-sm-inline">Storefront</span>
         <% end %>
 
+        <div class="dropdown flex-shrink-0">
+          <button class="btn btn-light text-nowrap d-flex align-items-center gap-1" type="button"
+                  data-bs-toggle="dropdown" aria-expanded="false" aria-label="Выбрать город">
+            <i class="bi bi-geo-alt" aria-hidden="true"></i>
+            <span class="d-none d-sm-inline"><%= current_city.name %></span>
+            <i class="bi bi-chevron-down small" aria-hidden="true"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li class="dropdown-header">Выберите город</li>
+            <% City::ALL.each do |city| %>
+              <li>
+                <%= button_to city_path(code: city.code), method: :patch,
+                      class: "dropdown-item d-flex align-items-center justify-content-between gap-2" do %>
+                  <%= city.name %>
+                  <% if city.code == current_city.code %>
+                    <i class="bi bi-check2 text-primary" aria-hidden="true"></i>
+                  <% end %>
+                <% end %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
         <%# TODO: обработчик q в home#index пока не реализован — форма возвращает на главную. %>
         <%= form_with url: root_path, method: :get, class: "flex-grow-1" do |f| %>
           <div class="search-pill d-flex align-items-center ps-3">

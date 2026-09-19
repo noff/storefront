@@ -125,6 +125,10 @@ h1, h2, h3, .display-1, .display-2, .display-3, .display-4, .display-5, .display
 
 .dropdown-email { max-width: 16rem; }
 
+// button_to внутри выпадающего меню оборачивает кнопку в form —
+// без сброса margin пункты меню разъезжаются.
+.dropdown-menu form { margin: 0; }
+
 // Без min-width: 0 флекс-элемент не даёт text-truncate обрезать длинное название.
 .min-w-0 { min-width: 0; }
 
