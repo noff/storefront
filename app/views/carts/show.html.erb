@@ -1,3 +1,7 @@
+<script>
+    r46('track', 'cart', <%= @cart.map { |x| {id: x.product.ext_id, amount: x.quantity} }.to_json.html_safe %>);
+</script>
+
 <% content_for :title, "Моя корзина" %>
 
 <h1 class="section-title h2 mb-4">Корзина</h1>

@@ -14,6 +14,7 @@ class OrdersController < ApplicationController
       total = cart.map { |x| x.product.price * x.quantity }.sum
       order.update! total: total
       Cart::Clear.call session: session
+      session[:order_created] = order.id
       redirect_to order_path(order), notice: "Заказ создан"
     end
   rescue => e

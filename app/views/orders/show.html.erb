@@ -1,3 +1,16 @@
+<% if session[:order_created].present? %>
+  <script>
+      r46('track', 'purchase', {
+          "email": "<%= current_user.email %>",
+          "id": "<%= current_user.id %>",
+          "products": <%= @order.order_items.map { |x| {id: x.product.ext_id, price: x.product.price, amount: x.quantity} }.to_json.html_safe %>,
+          "order": '<%= @order.id %>',
+          "order_price": <%= @order.total %>
+      });
+  </script>
+  <% session.delete(:order_created) %>
+<% end %>
+
 <% content_for :title, "Заказ #{@order.id}" %>
 
 <nav class="mb-3" aria-label="Хлебные крошки">

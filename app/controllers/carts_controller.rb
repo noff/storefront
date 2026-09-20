@@ -9,11 +9,13 @@ class CartsController < ApplicationController
   def add
     product = Product.find_by! ext_id: params[:product_id]
     Cart::Add.call product: product, quantity: 1, session: session
+    session[:added_to_cart] = params[:product_id]
     redirect_back fallback_location: root_path
   end
 
   def remove
     Cart::Remove.call product_ext_id: params[:product_id], session: session
+    session[:removed_from_cart] = params[:product_id]
     redirect_back fallback_location: root_path
   end
 

@@ -39,6 +39,17 @@
         })
     </script>
 
+    <script>
+      <% if session[:added_to_cart].present? %>
+        r46("track", "cart", "<%= session[:added_to_cart] %>");
+        <% session.delete(:added_to_cart) %>
+      <% end %>
+      <% if session[:removed_from_cart].present? %>
+        r46("track", "remove_from_cart", "<%= session[:removed_from_cart] %>");
+        <% session.delete(:removed_from_cart) %>
+      <% end %>
+    </script>
+
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
