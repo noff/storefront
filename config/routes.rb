@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: {
+    sessions: "users/sessions",
+    registrations: "users/registrations"
+  }
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -24,6 +27,7 @@ Rails.application.routes.draw do
     end
   end
   resources :orders, only: [:create, :show, :index, :destroy]
+  resources :favorites, only: [:create, :destroy], param: :product_id
   resource :city, only: [:update]
 
   # Defines the root path route ("/")

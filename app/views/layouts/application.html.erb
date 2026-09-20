@@ -48,6 +48,22 @@
         r46("track", "remove_from_cart", "<%= session[:removed_from_cart] %>");
         <% session.delete(:removed_from_cart) %>
       <% end %>
+      <% if session[:added_to_wish].present? %>
+        r46("track", "wish", "<%= session[:added_to_wish] %>");
+        <% session.delete(:added_to_wish) %>
+      <% end %>
+      <% if session[:removed_from_wish].present? %>
+        r46("track", "remove_wish", "<%= session[:removed_from_wish] %>");
+        <% session.delete(:removed_from_wish) %>
+      <% end %>
+      <% if session[:signed_in].present? %>
+        r46("track", "signed_in");
+        <% session.delete(:signed_in) %>
+      <% end %>
+      <% if session[:signed_up].present? %>
+        r46("track", "signed_up");
+        <% session.delete(:signed_up) %>
+      <% end %>
     </script>
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>

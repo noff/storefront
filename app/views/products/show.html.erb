@@ -6,6 +6,7 @@
 
 <% specs = @product.parsed_params %>
 <% in_cart = current_cart.any? { |item| item.product.ext_id == @product.ext_id } %>
+<% in_wishlist = user_signed_in? && current_user.favorites.exists?(product_id: @product.id) %>
 
 <%# Без категории крошки не имеют смысла — не рисуем их вовсе. %>
 <% if @breadcrumbs.any? %>
@@ -57,29 +58,80 @@
       </div>
 
       <div class="panel p-4 mb-4">
-        <div class="d-flex align-items-baseline gap-2 mb-3">
-          <span class="display-6 fw-bold"><%= price(@product.price) %></span>
-          <% if @product.old_price %>
+
+        <% if @product.available %>
+          <div class="d-flex align-items-baseline gap-2 mb-3">
+            <span class="display-6 fw-bold"><%= price(@product.price) %></span>
+            <% if @product.old_price %>
             <span class="text-body-tertiary text-decoration-line-through fs-5">
               <%= price(@product.old_price) %>
             </span>
+            <% end %>
+          </div>
+
+          <% if in_cart %>
+            <div class="d-grid gap-2">
+              <%= button_to remove_cart_path(product_id: @product), method: :delete,
+                            class: "btn btn-light btn-lg", form_class: "d-grid" do %>
+                <i class="bi bi-bag-dash me-2" aria-hidden="true"></i>Убрать из корзины
+              <% end %>
+              <%= link_to "Перейти в корзину", cart_path, class: "btn btn-primary btn-lg" %>
+            </div>
+          <% else %>
+            <%= button_to add_cart_path(product_id: @product), method: :patch,
+                          class: "btn btn-primary btn-lg", form_class: "d-grid" do %>
+              <i class="bi bi-bag-plus me-2" aria-hidden="true"></i>Добавить в корзину
+            <% end %>
+          <% end %>
+        <% end %>
+
+        <%# Избранное доступно и для отсутствующих товаров — отсюда и блок вне ветки available. %>
+        <div class="d-grid mt-2">
+          <% if !user_signed_in? %>
+            <%= link_to new_user_session_path, class: "btn btn-outline-secondary btn-lg" do %>
+              <i class="bi bi-heart me-2" aria-hidden="true"></i>Войдите, чтобы добавить в избранное
+            <% end %>
+          <% elsif in_wishlist %>
+            <%= button_to favorite_path(product_id: @product), method: :delete,
+                          class: "btn btn-danger btn-lg", form_class: "d-grid" do %>
+              <i class="bi bi-heart-fill me-2" aria-hidden="true"></i>В избранном
+            <% end %>
+          <% else %>
+            <%= button_to favorites_path(product_id: @product), method: :post,
+                          class: "btn btn-outline-danger btn-lg", form_class: "d-grid" do %>
+              <i class="bi bi-heart me-2" aria-hidden="true"></i>В избранное
+            <% end %>
           <% end %>
         </div>
 
-        <% if in_cart %>
-          <div class="d-grid gap-2">
-            <%= button_to remove_cart_path(product_id: @product), method: :delete,
-                  class: "btn btn-light btn-lg", form_class: "d-grid" do %>
-              <i class="bi bi-bag-dash me-2" aria-hidden="true"></i>Убрать из корзины
-            <% end %>
-            <%= link_to "Перейти в корзину", cart_path, class: "btn btn-primary btn-lg" %>
-          </div>
+        <%# Подписка на триггер REES46: цена — для товаров в наличии, остаток — для отсутствующих. %>
+        <% if @product.available %>
+          <% trigger_event   = "product_price_decrease" %>
+          <% trigger_payload = { item: @product.ext_id, price: @product.price } %>
+          <% trigger_label   = "Уведомить о снижении цены" %>
+          <% trigger_icon    = "bi-graph-down-arrow" %>
+          <% trigger_done    = "Готово! Сообщим, когда цена снизится." %>
         <% else %>
-          <%= button_to add_cart_path(product_id: @product), method: :patch,
-                class: "btn btn-primary btn-lg", form_class: "d-grid" do %>
-            <i class="bi bi-bag-plus me-2" aria-hidden="true"></i>Добавить в корзину
-          <% end %>
+          <% trigger_event   = "product_available" %>
+          <% trigger_payload = { item: @product.ext_id } %>
+          <% trigger_label   = "Уведомить о появлении в наличии" %>
+          <% trigger_icon    = "bi-bell" %>
+          <% trigger_done    = "Готово! Сообщим, когда товар появится в наличии." %>
         <% end %>
+
+        <div class="d-grid mt-2"
+             data-controller="subscribe-trigger"
+             data-subscribe-trigger-event-value="<%= trigger_event %>"
+             data-subscribe-trigger-payload-value="<%= trigger_payload.to_json %>"
+             data-subscribe-trigger-done-text-value="<%= trigger_done %>">
+          <button type="button" class="btn btn-outline-primary btn-lg"
+                  data-subscribe-trigger-target="button"
+                  data-action="subscribe-trigger#subscribe">
+            <i class="bi <%= trigger_icon %> me-2" aria-hidden="true"></i><%= trigger_label %>
+          </button>
+          <p class="small text-body-secondary mt-2 mb-0 d-none"
+             data-subscribe-trigger-target="status" role="status" aria-live="polite"></p>
+        </div>
 
         <ul class="list-unstyled small text-body-secondary d-flex flex-column gap-2 mt-4 mb-0">
           <li><i class="bi bi-truck me-2 text-primary" aria-hidden="true"></i>Доставка по России от 1 дня</li>

@@ -1,6 +1,7 @@
 class Product < ApplicationRecord
   belongs_to :category, optional: true
   has_many :order_items, dependent: :nullify
+  has_many :favorites, dependent: :destroy
 
   # В урлах и параметрах используется ext_id из фида, а не первичный ключ.
   def to_param

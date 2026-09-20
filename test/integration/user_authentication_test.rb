@@ -18,6 +18,38 @@ class UserAuthenticationTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "успешная регистрация трекает signed_up один раз" do
+    post user_registration_path, params: {
+      user: { email: "tracked-user@example.com", password: "password", password_confirmation: "password" }
+    }
+
+    follow_redirect!
+    assert_match 'r46("track", "signed_up")', @response.body
+    assert_no_match 'r46("track", "signed_in")', @response.body
+
+    # Флаг одноразовый: на следующей странице события уже нет.
+    get root_path
+    assert_no_match 'r46("track", "signed_up")', @response.body
+  end
+
+  test "успешный вход трекает signed_in один раз" do
+    post user_session_path, params: { user: { email: users(:alice).email, password: "password" } }
+
+    follow_redirect!
+    assert_match 'r46("track", "signed_in")', @response.body
+
+    get root_path
+    assert_no_match 'r46("track", "signed_in")', @response.body
+  end
+
+  test "неудачный вход не трекает signed_in" do
+    post user_session_path, params: { user: { email: users(:alice).email, password: "wrong" } }
+    assert_no_match 'r46("track", "signed_in")', @response.body
+
+    get root_path
+    assert_no_match 'r46("track", "signed_in")', @response.body
+  end
+
   test "вход и выход" do
     get new_user_session_path
     assert_response :success
