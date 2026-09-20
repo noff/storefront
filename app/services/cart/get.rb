@@ -16,10 +16,10 @@ module Cart
       raw = session[:cart]
       return [] unless raw.is_a?(Array) && raw.present?
 
-      products = Product.where(id: raw.filter_map { |item| item_id(item) }).index_by(&:id)
+      products = Product.where(ext_id: raw.filter_map { |item| item_ext_id(item) }).index_by(&:ext_id)
 
       raw.filter_map do |item|
-        product = products[item_id(item)]
+        product = products[item_ext_id(item)]
         next if product.nil?
 
         DTO::Cart::Item.new(product: product, quantity: item_quantity(item))
@@ -30,8 +30,9 @@ module Cart
 
     # В сессии ключи приходят строками (JSON-сериализация куки),
     # но в рамках текущего запроса они ещё символьные.
-    def item_id(item)
-      (item["product_id"] || item[:product_id])&.to_i
+    # Значение — ext_id товара, строка.
+    def item_ext_id(item)
+      (item["product_id"] || item[:product_id])&.to_s
     end
 
     def item_quantity(item)

@@ -1,7 +1,7 @@
 <% content_for :title, @product.name %>
 
 <% specs = @product.parsed_params %>
-<% in_cart = current_cart.any? { |item| item.product.id == @product.id } %>
+<% in_cart = current_cart.any? { |item| item.product.ext_id == @product.ext_id } %>
 
 <%# Без категории крошки не имеют смысла — не рисуем их вовсе. %>
 <% if @breadcrumbs.any? %>
@@ -64,14 +64,14 @@
 
         <% if in_cart %>
           <div class="d-grid gap-2">
-            <%= button_to remove_cart_path(product_id: @product.id), method: :delete,
+            <%= button_to remove_cart_path(product_id: @product), method: :delete,
                   class: "btn btn-light btn-lg", form_class: "d-grid" do %>
               <i class="bi bi-bag-dash me-2" aria-hidden="true"></i>Убрать из корзины
             <% end %>
             <%= link_to "Перейти в корзину", cart_path, class: "btn btn-primary btn-lg" %>
           </div>
         <% else %>
-          <%= button_to add_cart_path(product_id: @product.id), method: :patch,
+          <%= button_to add_cart_path(product_id: @product), method: :patch,
                 class: "btn btn-primary btn-lg", form_class: "d-grid" do %>
             <i class="bi bi-bag-plus me-2" aria-hidden="true"></i>Добавить в корзину
           <% end %>

@@ -65,6 +65,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Загружает .env в ENV локально (в проде переменные приходят из Kamal secrets)
+  gem "dotenv-rails"
 end
 
 group :development do

@@ -9,6 +9,21 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", product.name
   end
 
+  test "url is built from ext_id and resolves by it" do
+    product = products(:air_max)
+
+    assert_equal "/products/air-max-pro", product_path(product)
+
+    get "/products/air-max-pro"
+    assert_response :success
+  end
+
+  test "lookup by primary key returns 404" do
+    get "/products/#{products(:air_max).id}"
+
+    assert_response :not_found
+  end
+
   test "renders breadcrumbs up to the product category" do
     get product_url(products(:air_max))
 

@@ -9,6 +9,11 @@ class Category < ApplicationRecord
 
   scope :roots, -> { where(parent_id: nil) }
 
+  # В урлах и параметрах используется ext_id из фида, а не первичный ключ.
+  def to_param
+    ext_id
+  end
+
   # Родители от корня к ближайшему. Сам объект в результат не входит.
   # Ограничение глубины — страховка от цикла parent_id в фиде.
   def ancestors(limit: 10)

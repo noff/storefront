@@ -9,7 +9,7 @@ class OrdersController < ApplicationController
     Order.transaction do
       order = current_user.orders.create!
       cart.each do |item|
-        order.order_items.create! product_id: item.product.id, quantity: item.quantity, price: item.product.price
+        order.order_items.create! product: item.product, quantity: item.quantity, price: item.product.price
       end
       total = cart.map { |x| x.product.price * x.quantity }.sum
       order.update! total: total

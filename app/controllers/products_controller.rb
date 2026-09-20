@@ -1,6 +1,6 @@
 class ProductsController < ApplicationController
   def show
-    @product = Product.includes(:category).find(params[:id])
+    @product = Product.includes(:category).find_by!(ext_id: params[:id])
 
     category = @product.category
     # Крошки ведут до категории товара включительно — сам товар в них не ссылка.

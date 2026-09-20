@@ -7,20 +7,20 @@ class CartsController < ApplicationController
   end
 
   def add
-    product = Product.find params[:product_id]
+    product = Product.find_by! ext_id: params[:product_id]
     Cart::Add.call product: product, quantity: 1, session: session
     redirect_back fallback_location: root_path
   end
 
   def remove
-    Cart::Remove.call product_id: params[:product_id], session: session
+    Cart::Remove.call product_ext_id: params[:product_id], session: session
     redirect_back fallback_location: root_path
   end
 
   def increase
-    product = Product.find params[:product_id]
+    product = Product.find_by! ext_id: params[:product_id]
     cart = current_cart
-    item = cart.select { |x| x.product.id == product.id }.first
+    item = cart.select { |x| x.product.ext_id == product.ext_id }.first
     if item
       Cart::Add.call session: session, product: item.product, quantity: 1
     end
@@ -28,12 +28,12 @@ class CartsController < ApplicationController
   end
 
   def decrease
-    product = Product.find params[:product_id]
+    product = Product.find_by! ext_id: params[:product_id]
     cart = current_cart
-    item = cart.select { |x| x.product.id == product.id }.first
+    item = cart.select { |x| x.product.ext_id == product.ext_id }.first
     if item
       if item.quantity == 1
-        Cart::Remove.call session: session, product_id: item.product.id
+        Cart::Remove.call session: session, product_ext_id: item.product.ext_id
       else
         Cart::Add.call session: session, product: item.product, quantity: -1
       end

@@ -28,13 +28,13 @@
             </div>
 
             <div class="qty-stepper">
-              <%= link_to decrease_cart_path(product_id: item.product.id),
+              <%= link_to decrease_cart_path(product_id: item.product),
                     class: "btn btn-light", data: { turbo_method: :patch },
                     aria: { label: "Уменьшить количество" } do %>
                 <i class="bi bi-dash" aria-hidden="true"></i>
               <% end %>
               <span class="qty-stepper__value"><%= item.quantity %></span>
-              <%= link_to increase_cart_path(product_id: item.product.id),
+              <%= link_to increase_cart_path(product_id: item.product),
                     class: "btn btn-light", data: { turbo_method: :patch },
                     aria: { label: "Увеличить количество" } do %>
                 <i class="bi bi-plus" aria-hidden="true"></i>
@@ -45,7 +45,7 @@
               <%= price(item.product.price.to_i * item.quantity) %>
             </div>
 
-            <%= button_to remove_cart_path(product_id: item.product.id), method: :delete,
+            <%= button_to remove_cart_path(product_id: item.product), method: :delete,
                   class: "btn btn-link btn-icon text-body-tertiary p-0",
                   aria: { label: "Удалить «#{item.product.name}» из корзины" } do %>
               <i class="bi bi-x-lg" aria-hidden="true"></i>

@@ -19,7 +19,7 @@ module Cart
       # JSON-сериализации куки, и чтение в том же запросе не ломается.
       session[:cart] = products.map do |item|
         {
-          "product_id" => item.product.id,
+          "product_id" => item.product.ext_id,
           "quantity" => item.quantity,
         }
       end
