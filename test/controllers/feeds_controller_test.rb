@@ -23,6 +23,21 @@ class FeedsControllerTest < ActionDispatch::IntegrationTest
     assert @doc.at_xpath("//shop/company").text.present?
   end
 
+  test "shop declares every city in the locations directory" do
+    locations = @doc.xpath("//shop/locations/location")
+
+    assert_equal City::ALL.map(&:code), locations.map { |l| l["id"] }
+    assert_equal City::ALL.map(&:name), locations.map { |l| l["name"] }
+    assert_equal [ "city" ] * City::ALL.size, locations.map { |l| l["type"] }
+  end
+
+  test "offer locations reference ids from the shop directory" do
+    declared = @doc.xpath("//shop/locations/location").map { |l| l["id"] }
+    used = offer_for(products(:air_max)).xpath("locations/location").map { |l| l["id"] }
+
+    assert_equal declared.sort, used.sort
+  end
+
   test "categories use ext_id and link inside the storefront" do
     running = @doc.at_xpath("//categories/category[@id='running']")
 

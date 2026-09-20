@@ -46,6 +46,13 @@ module Feed
       xml.currencies do
         xml.currency(id: CURRENCY, rate: "1")
       end
+      # Справочник локаций, на который ссылаются <location id> внутри офферов.
+      # Дерево плоское: в City есть только города, ни регионов, ни пунктов выдачи.
+      xml.locations do
+        City::ALL.each do |city|
+          xml.location(id: city.code, type: "city", name: city.name)
+        end
+      end
 
       # Пролог собираем строкой: XML-декларация обязана стоять в самом начале
       # файла, а Builder с margin сдвинул бы её отступом.
