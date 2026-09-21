@@ -25,7 +25,7 @@ proxy:
 # reverse-forwards this port to the server during push/pull.
 # Port 5556, because 5555 is already taken on the server.
 registry:
-  server: localhost:5556
+  server: localhost:5555
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
@@ -45,7 +45,7 @@ aliases:
 
 # Persistent storage: SQLite databases and Active Storage files on the host.
 volumes:
-  - "/home/daily/storefront/storage:/rails/storage"
+  - '/home/daily/storefront/storage:/rails/storage'
 
 # Bridge fingerprinted assets between versions to avoid 404 on in-flight requests.
 asset_path: /rails/public/assets
