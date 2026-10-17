@@ -5,7 +5,7 @@ gem "rails", "~> 8.1.3", ">= 8.1.3.1"
 # TODO: снять ограничение, когда ActiveSupport перестанет звать ::JSON.parse(json, options)
 # вторым позиционным аргументом (active_support/json/decoding.rb) — json 3.0 его больше не принимает.
 # Верхняя граница, а не пин: не блокируем гемы, которым нужен свежий json 2.x.
-gem "json", "< 3"
+gem "json", "< 4"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
