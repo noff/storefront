@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.3", ">= 8.1.3.1"
+gem "rails", "~> 8.1.4"
 # TODO: снять ограничение, когда ActiveSupport перестанет звать ::JSON.parse(json, options)
 # вторым позиционным аргументом (active_support/json/decoding.rb) — json 3.0 его больше не принимает.
 # Верхняя граница, а не пин: не блокируем гемы, которым нужен свежий json 2.x.
